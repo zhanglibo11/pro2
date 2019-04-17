@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script type="text/javascript" src="__PUBLIC__/js/jquery.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/jquery.qrcode.min.js"></script>
+</head>
+
+ 
+<body>
+<span id="id2">11</span><span>秒后自动刷新</span>
+<div id="qrid"></div> 
+</body>
+<script type="text/javascript">
+    //window.onload = daojishi;
+   window.onload = getImg;
+    /*var qrstr = "https://www.baidu.com";
+            $('#qrid').qrcode(qrstr);//不指定二维码大写
+            $('#qrid').qrcode({width: 280,height: 280,text: qrstr});//指定二维码大小
+*/
+
+
+    function daojishi()
+    {    
+    	//getImg();
+        var starttime=document.getElementById("id2").innerText;
+        if (starttime ==11) {
+        	getImg();
+        }
+        if(starttime==0)
+        {   
+            re_start();
+            return;
+        }
+        setTimeout("daojishi()",1000);
+        starttime--;
+        document.getElementById("id2").innerText=starttime;
+    }
+    function re_start(){
+        starttime = 11;
+        document.getElementById("id2").innerText=starttime;
+        daojishi();
+        return;
+    }
+
+    function getImg(){
+       $.ajax({
+           url: "{:url('index/test')}",
+           type: "post",
+           dataType:"json"
+       })
+       .done(function(r) {
+       	if ($("#qrid").has('canvas').length) {
+       		$("canvas").remove();
+       	}
+       	$('#qrid').qrcode({width: 150,height: 150,text: r.text});   
+       });
+    }
+    
+    window.onload = daojishi;
+</script>
+</html>
